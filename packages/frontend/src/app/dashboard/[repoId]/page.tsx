@@ -100,6 +100,16 @@ export default function RepoDetailPage() {
             </a>
           </li>
           <li>
+            <a href={`/dashboard/${repoId}/conventions`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Conventions
+            </a>
+          </li>
+          <li>
+            <a href={`/dashboard/${repoId}/env-setup`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Env Setup
+            </a>
+          </li>
+          <li>
             <a href={`/dashboard/${repoId}/qa`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
               Q&A
             </a>

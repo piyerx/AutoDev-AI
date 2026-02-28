@@ -46,3 +46,29 @@
 
 ---
 <!-- AI appends new entries below -->
+
+### [MILESTONE 4: WALKTHROUGHS + CONVENTIONS + ENV SETUP] ✅ COMPLETED
+**Prompt:** Build Milestone 4 — Walkthroughs, Conventions Engine, Environment Setup Autopilot
+**Changes:**
+- Created `prompts/walkthrough.ts` — Walkthrough generation prompts (4 exports)
+- Created `prompts/conventions.ts` — Convention detection prompts (2 exports)
+- Created `prompts/envSetup.ts` — Environment setup analysis prompts (2 exports)
+- Updated `shared/types/analysis.ts` — EnvSetupGuide types (SetupStep, SetupConflict, MissingPiece, EnvVariable, DockerSupport), expanded Convention + Walkthrough types
+- Created `services/envAnalyzer.ts` — categorizeFiles + analyzeEnvironmentSetup with Bedrock
+- Created `routes/walkthroughs.ts` — GET list, POST generate custom, GET by ID
+- Created `routes/conventions.ts` — GET list, POST trigger detection (fire-and-forget)
+- Created `routes/envSetup.ts` — GET guide, POST trigger analysis (fire-and-forget)
+- Updated `analysisOrchestrator.ts` — Cascade trigger after architecture (conventions + walkthroughs + env-setup via Promise.allSettled), 3 new exported analysis functions
+- Updated `index.ts` — Registered 3 new route mounts (/api/walkthroughs, /api/conventions, /api/env-setup)
+- Updated `pullRequest.ts` — Full PR onboarding impact comment (affected modules, changed files, conventions)
+- Created `WalkthroughViewer.tsx` — Step-by-step viewer with progress bar, code snippets, navigation
+- Created `ConventionCard.tsx` — Convention cards with do/don't examples, grouped by category
+- Created `EnvSetupGuide.tsx` — Interactive setup guide with checkable steps, conflicts, env variables
+- Created `walkthroughs/page.tsx` — Walkthrough listing + custom generation page
+- Created `conventions/page.tsx` — Convention listing + detection trigger page
+- Created `env-setup/page.tsx` — Environment setup guide page
+- Updated `[repoId]/page.tsx` sidebar — Added Conventions + Env Setup nav links
+- Created `WalkthroughPanel.ts` — VS Code webview panel with walkthrough listing, generation, step navigation
+- Updated `extension.ts` — Wired WalkthroughPanel to startWalkthrough command + new showWalkthroughs command
+- Fixed `api/client.ts` — Corrected walkthrough/convention API URLs + added generateWalkthrough function
+**Next:** Milestone 5 — Polish + Semantic Search

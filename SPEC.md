@@ -91,29 +91,29 @@ Build AutoDev — a platform that connects to GitHub repos and generates interac
 ## Milestone 4: Walkthroughs + Conventions + Environment Setup Autopilot (Day 4)
 
 ### Files to Create/Modify
-- [ ] `packages/backend/src/prompts/walkthrough.ts` — walkthrough generation prompt
-- [ ] `packages/backend/src/prompts/conventions.ts` — convention detection prompt
-- [ ] `packages/backend/src/prompts/envSetup.ts` — environment setup analysis prompt
-- [ ] `packages/backend/src/routes/walkthroughs.ts` — walkthrough endpoints
-- [ ] `packages/backend/src/routes/conventions.ts` — convention endpoints
-- [ ] `packages/backend/src/routes/envSetup.ts` — environment setup endpoints
-- [ ] `packages/backend/src/services/envAnalyzer.ts` — scans repo for setup requirements (.nvmrc, Dockerfile, docker-compose.yml, .env.example, package.json engines, Makefile)
-- [ ] `packages/github-app/src/handlers/pullRequest.ts` — PR onboarding impact comments
-- [ ] `packages/frontend/src/app/dashboard/[repoId]/walkthroughs/page.tsx` — walkthrough list
-- [ ] `packages/frontend/src/components/WalkthroughViewer.tsx` — step-by-step viewer
-- [ ] `packages/frontend/src/components/ConventionCard.tsx` — convention cards
-- [ ] `packages/frontend/src/components/EnvSetupGuide.tsx` — environment setup checklist with conflict warnings
-- [ ] `packages/vscode-extension/src/panels/WalkthroughPanel.ts` — walkthrough in VS Code
+- [x] `packages/backend/src/prompts/walkthrough.ts` — walkthrough generation prompt
+- [x] `packages/backend/src/prompts/conventions.ts` — convention detection prompt
+- [x] `packages/backend/src/prompts/envSetup.ts` — environment setup analysis prompt
+- [x] `packages/backend/src/routes/walkthroughs.ts` — walkthrough endpoints
+- [x] `packages/backend/src/routes/conventions.ts` — convention endpoints
+- [x] `packages/backend/src/routes/envSetup.ts` — environment setup endpoints
+- [x] `packages/backend/src/services/envAnalyzer.ts` — scans repo for setup requirements (.nvmrc, Dockerfile, docker-compose.yml, .env.example, package.json engines, Makefile)
+- [x] `packages/github-app/src/handlers/pullRequest.ts` — PR onboarding impact comments
+- [x] `packages/frontend/src/app/dashboard/[repoId]/walkthroughs/page.tsx` — walkthrough list
+- [x] `packages/frontend/src/components/WalkthroughViewer.tsx` — step-by-step viewer
+- [x] `packages/frontend/src/components/ConventionCard.tsx` — convention cards
+- [x] `packages/frontend/src/components/EnvSetupGuide.tsx` — environment setup checklist with conflict warnings
+- [x] `packages/vscode-extension/src/panels/WalkthroughPanel.ts` — walkthrough in VS Code
 
 ### Definition of Done — Milestone 4
-- [ ] Pre-generated walkthroughs appear after analysis
-- [ ] Custom walkthroughs from user questions
-- [ ] Convention cards display detected patterns
-- [ ] PR comments show onboarding impact
-- [ ] Environment Setup Autopilot: AI scans repo → generates verified step-by-step setup guide
-- [ ] Flags conflicts (e.g. "README says Node 16 but package.json needs Node 18")
-- [ ] Detects missing setup pieces (e.g. "Repo uses Redis but no Redis setup docs found")
-- [ ] Setup guide visible on dashboard and VS Code extension
+- [x] Pre-generated walkthroughs appear after analysis
+- [x] Custom walkthroughs from user questions
+- [x] Convention cards display detected patterns
+- [x] PR comments show onboarding impact
+- [x] Environment Setup Autopilot: AI scans repo → generates verified step-by-step setup guide
+- [x] Flags conflicts (e.g. "README says Node 16 but package.json needs Node 18")
+- [x] Detects missing setup pieces (e.g. "Repo uses Redis but no Redis setup docs found")
+- [x] Setup guide visible on dashboard and VS Code extension
 
 ---
 
