@@ -2,8 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+import { getApiBase } from "@/lib/api";
 
 interface RelevantFile {
   path: string;
@@ -41,7 +40,7 @@ export default function QAPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/qa/${decodedRepoId}`, {
+      const res = await fetch(`${getApiBase(decodedRepoId)}/qa/${decodedRepoId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),

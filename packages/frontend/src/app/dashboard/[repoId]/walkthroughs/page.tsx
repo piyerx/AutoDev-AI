@@ -3,9 +3,8 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import WalkthroughViewer from "@/components/WalkthroughViewer";
+import { getApiBase } from "@/lib/api";
 import type { Walkthrough } from "@autodev/shared";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 export default function WalkthroughsPage() {
   const params = useParams();
@@ -24,7 +23,7 @@ export default function WalkthroughsPage() {
     if (!owner || !repo) return;
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/walkthroughs/${owner}/${repo}`);
+      const res = await fetch(`${getApiBase(decodedRepoId)}/walkthroughs/${owner}/${repo}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setWalkthroughs(data.walkthroughs || []);
@@ -44,7 +43,7 @@ export default function WalkthroughsPage() {
     if (!question.trim()) return;
     try {
       setGenerating(true);
-      const res = await fetch(`${API_BASE}/walkthroughs/${owner}/${repo}`, {
+      const res = await fetch(`${getApiBase(decodedRepoId)}/walkthroughs/${owner}/${repo}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: question.trim() }),

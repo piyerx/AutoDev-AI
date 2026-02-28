@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
@@ -12,7 +13,10 @@ interface RepoItem {
   techStack?: Record<string, string | undefined>;
 }
 
-export default function DashboardPage() {
+function DashboardContent() {
+  const searchParams = useSearchParams();
+  const isDemo = searchParams.get("demo") === "true";
+
   const [repos, setRepos] = useState<RepoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +24,8 @@ export default function DashboardPage() {
   const fetchRepos = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/repos`);
+      const endpoint = isDemo ? `${API_BASE}/demo/repos` : `${API_BASE}/repos`;
+      const res = await fetch(endpoint);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setRepos(Array.isArray(data) ? data : data.repos ?? []);
@@ -30,7 +35,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isDemo]);
 
   useEffect(() => {
     fetchRepos();
@@ -49,17 +54,29 @@ export default function DashboardPage() {
     return map[status] ?? map.pending;
   };
 
+  const demoSuffix = isDemo ? "?demo=true" : "";
+
   return (
     <div className="min-h-screen">
+      {/* Demo banner */}
+      {isDemo && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm font-medium">
+          Demo Mode — Exploring pre-analyzed sample repositories
+          <a href="/dashboard" className="ml-3 underline opacity-80 hover:opacity-100">Exit demo</a>
+        </div>
+      )}
+
       {/* Sidebar */}
-      <nav className="fixed left-0 top-0 w-64 h-full bg-gray-900 border-r border-gray-800 p-6">
-        <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          AutoDev
-        </h2>
+      <nav className={`fixed left-0 ${isDemo ? "top-10" : "top-0"} w-64 h-full bg-gray-900 border-r border-gray-800 p-6`}>
+        <a href="/">
+          <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            AutoDev
+          </h2>
+        </a>
         <ul className="space-y-2">
           <li>
             <a
-              href="/dashboard"
+              href={`/dashboard${demoSuffix}`}
               className="block px-3 py-2 rounded-lg bg-gray-800 text-white text-sm"
             >
               Repositories
@@ -69,9 +86,11 @@ export default function DashboardPage() {
       </nav>
 
       {/* Main content */}
-      <main className="ml-64 p-8">
+      <main className={`ml-64 p-8 ${isDemo ? "pt-18" : ""}`}>
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold">Connected Repositories</h1>
+          <h1 className="text-2xl font-bold">
+            {isDemo ? "Sample Repositories" : "Connected Repositories"}
+          </h1>
           <div className="flex gap-3">
             <button
               onClick={fetchRepos}
@@ -79,9 +98,11 @@ export default function DashboardPage() {
             >
               Refresh
             </button>
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
-              + Connect Repo
-            </button>
+            {!isDemo && (
+              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
+                + Connect Repo
+              </button>
+            )}
           </div>
         </div>
 
@@ -102,16 +123,21 @@ export default function DashboardPage() {
             <p className="text-gray-500 text-sm mb-6">
               Install the AutoDev GitHub App to get started
             </p>
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
-              Install GitHub App
-            </button>
+            <div className="flex gap-3 justify-center">
+              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors">
+                Install GitHub App
+              </button>
+              <a href="/dashboard?demo=true" className="px-4 py-2 border border-purple-600 text-purple-400 hover:bg-purple-950 rounded-lg text-sm font-medium transition-colors">
+                Try Demo Mode
+              </a>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {repos.map((repo) => (
               <a
                 key={repo.repoId}
-                href={`/dashboard/${encodeURIComponent(repo.repoId)}`}
+                href={`/dashboard/${encodeURIComponent(repo.repoId)}${demoSuffix}`}
                 className="p-5 border border-gray-800 rounded-xl bg-gray-900/50 hover:border-gray-600 transition-colors group"
               >
                 <h3 className="font-medium mb-2 group-hover:text-blue-400 transition-colors">
@@ -148,5 +174,13 @@ export default function DashboardPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" /></div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

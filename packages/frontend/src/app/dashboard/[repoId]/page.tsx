@@ -3,9 +3,8 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import ArchitectureMap from "@/components/ArchitectureMap";
+import { getApiBase } from "@/lib/api";
 import type { ArchitectureMap as ArchMapType } from "@autodev/shared";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 type AnalysisStatus = "pending" | "analyzing" | "completed" | "failed";
 
@@ -24,7 +23,7 @@ export default function RepoDetailPage() {
     if (!owner || !repo) return;
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/analysis/${owner}/${repo}/architecture`);
+      const res = await fetch(`${getApiBase(decodedRepoId)}/analysis/${owner}/${repo}/architecture`);
       if (res.status === 404) {
         setStatus("pending");
         setArchMap(null);
@@ -65,7 +64,7 @@ export default function RepoDetailPage() {
   async function triggerAnalysis() {
     try {
       setStatus("analyzing");
-      await fetch(`${API_BASE}/repos/analyze`, {
+      await fetch(`${getApiBase(decodedRepoId)}/repos/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ repoId: decodedRepoId }),

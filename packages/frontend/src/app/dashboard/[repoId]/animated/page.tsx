@@ -4,13 +4,12 @@ import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import AnimatedArchitectureMap from "@/components/AnimatedArchitectureMap";
 import LanguageSelector from "@/components/LanguageSelector";
+import { getApiBase } from "@/lib/api";
 import type {
   ArchitectureMap as ArchMapType,
   AnimationSequence,
   SupportedLanguage,
 } from "@autodev/shared";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 export default function AnimatedPage() {
   const params = useParams();
@@ -35,7 +34,7 @@ export default function AnimatedPage() {
   const fetchArch = useCallback(async () => {
     if (!owner || !repo) return;
     try {
-      const res = await fetch(`${API_BASE}/analysis/${owner}/${repo}/architecture`);
+      const res = await fetch(`${getApiBase(decodedRepoId)}/analysis/${owner}/${repo}/architecture`);
       if (!res.ok) return;
       const data = await res.json();
       setArchMap(data.content ?? data);
@@ -48,7 +47,7 @@ export default function AnimatedPage() {
   const fetchSequences = useCallback(async () => {
     if (!owner || !repo) return;
     try {
-      const res = await fetch(`${API_BASE}/animated/${owner}/${repo}`);
+      const res = await fetch(`${getApiBase(decodedRepoId)}/animated/${owner}/${repo}`);
       if (!res.ok) return;
       const data = await res.json();
       setSequences(data.sequences || []);
@@ -70,7 +69,7 @@ export default function AnimatedPage() {
     try {
       setGenerating(true);
       setError(null);
-      const res = await fetch(`${API_BASE}/animated/${owner}/${repo}/generate`, {
+      const res = await fetch(`${getApiBase(decodedRepoId)}/animated/${owner}/${repo}/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fresherMode }),
@@ -89,7 +88,7 @@ export default function AnimatedPage() {
     try {
       setExplaining(true);
       setExplanation(null);
-      const res = await fetch(`${API_BASE}/animated/${owner}/${repo}/explain-node`, {
+      const res = await fetch(`${getApiBase(decodedRepoId)}/animated/${owner}/${repo}/explain-node`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nodeId, fresherMode }),
@@ -101,7 +100,7 @@ export default function AnimatedPage() {
       // Translate if non-English
       if (language !== "en") {
         try {
-          const tRes = await fetch(`${API_BASE}/i18n/translate`, {
+          const tRes = await fetch(`${getApiBase(decodedRepoId)}/i18n/translate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text, targetLanguage: language, repoId: decodedRepoId, fresherMode }),

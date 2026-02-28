@@ -5,9 +5,9 @@ import { useState, useEffect, useCallback } from "react";
 import SkillRadar from "@/components/SkillRadar";
 import ProgressTimeline from "@/components/ProgressTimeline";
 import ModuleCompletionGrid from "@/components/ModuleCompletionGrid";
+import { getApiBase } from "@/lib/api";
 import type { DeveloperProgress } from "@autodev/shared";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 const DEFAULT_USER = "anonymous";
 
 export default function ProgressPage() {
@@ -25,7 +25,7 @@ export default function ProgressPage() {
     try {
       setLoading(true);
       const res = await fetch(
-        `${API_BASE}/progress/${owner}/${repo}/${DEFAULT_USER}`
+        `${getApiBase(decodedRepoId)}/progress/${owner}/${repo}/${DEFAULT_USER}`
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: DeveloperProgress = await res.json();

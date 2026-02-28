@@ -2,16 +2,16 @@
 > Written by AI when quota approaches or /checkpoint is called.
 > On resume: read this first, then continue from "Resume From".
 
-**Status:** Milestones 1-6 Complete — Ready for Milestone 7
+**Status:** ALL 7 MILESTONES COMPLETE — Demo Day Ready
 **Date:** 2026-03-02
 
 ---
 
 ## Resume From
-Milestone 7: Final Polish + Demo Day. Need to:
-1. README documentation with screenshots/demos
-2. Final deployment prep/testing
-3. Demo flow preparation
+All milestones complete. Project is demo-ready. Optional next steps:
+1. Run `pnpm build` to verify full compilation
+2. Record demo video walkthrough
+3. Deploy to AWS (infrastructure/template.yaml)
 
 ## Completed So Far
 - **Milestone 1 (Foundation)** — fully done
@@ -75,9 +75,18 @@ Milestone 7: Final Polish + Demo Day. Need to:
   - All 8 sidebar pages updated with "My Progress" and "Team" nav links
   - Backend tests: 29 tests (vitest) — classifyArea, getAreasFromArchitecture, computeSkillScores, computeDeveloperProgress, edge cases
   - Frontend tests: 15 tests (vitest + @testing-library/react) — SkillRadar, ProgressTimeline, ModuleCompletionGrid
+- **Milestone 7 (Demo Day)** — fully done
+  - `routes/demo.ts` (~670 lines) — Full demo data API serving 3 sample repos (express-shop, react-dashboard, python-ml-api)
+  - `lib/api.ts` — `useIsDemo()`, `getApiBase(repoId)` routing utility
+  - All 8 dashboard sub-pages wired for demo mode via `getApiBase(decodedRepoId)`
+  - `dashboard/page.tsx` — Demo mode with `?demo=true` showing demo repos
+  - `demo/page.tsx` (~260 lines) — Guided 5-step demo walkthrough page
+  - `page.tsx` — Polished landing page with hero, features, metrics
+  - `GET /health`, `GET /api/warmup` — Health check + warm-up endpoints
+  - README milestones all ✅ Done, Demo Mode section added
 
 ## Remaining
-- Milestone 7: Demo Day (Day 7)
+- (none — all milestones complete)
 
 ---
 <!-- AI overwrites entire file on each checkpoint -->

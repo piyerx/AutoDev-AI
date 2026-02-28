@@ -3,9 +3,8 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import EnvSetupGuideView from "@/components/EnvSetupGuide";
+import { getApiBase } from "@/lib/api";
 import type { EnvSetupGuide } from "@autodev/shared";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 export default function EnvSetupPage() {
   const params = useParams();
@@ -22,7 +21,7 @@ export default function EnvSetupPage() {
     if (!owner || !repo) return;
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/env-setup/${owner}/${repo}`);
+      const res = await fetch(`${getApiBase(decodedRepoId)}/env-setup/${owner}/${repo}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setGuide(data.envSetup || null);
@@ -41,7 +40,7 @@ export default function EnvSetupPage() {
   async function triggerAnalysis() {
     try {
       setAnalyzing(true);
-      await fetch(`${API_BASE}/env-setup/${owner}/${repo}`, { method: "POST" });
+      await fetch(`${getApiBase(decodedRepoId)}/env-setup/${owner}/${repo}`, { method: "POST" });
       // Poll for results
       setTimeout(fetchGuide, 15_000);
       setTimeout(fetchGuide, 30_000);

@@ -3,9 +3,8 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { ConventionList } from "@/components/ConventionCard";
+import { getApiBase } from "@/lib/api";
 import type { Convention } from "@autodev/shared";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 export default function ConventionsPage() {
   const params = useParams();
@@ -22,7 +21,7 @@ export default function ConventionsPage() {
     if (!owner || !repo) return;
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/conventions/${owner}/${repo}`);
+      const res = await fetch(`${getApiBase(decodedRepoId)}/conventions/${owner}/${repo}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setConventions(data.conventions || []);
@@ -41,7 +40,7 @@ export default function ConventionsPage() {
   async function triggerDetection() {
     try {
       setDetecting(true);
-      await fetch(`${API_BASE}/conventions/${owner}/${repo}`, { method: "POST" });
+      await fetch(`${getApiBase(decodedRepoId)}/conventions/${owner}/${repo}`, { method: "POST" });
       // Poll for results
       setTimeout(fetchConventions, 15_000);
       setTimeout(fetchConventions, 30_000);

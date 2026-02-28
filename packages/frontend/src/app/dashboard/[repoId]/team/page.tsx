@@ -3,9 +3,8 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import SkillRadar from "@/components/SkillRadar";
+import { getApiBase } from "@/lib/api";
 import type { TeamProgress, DeveloperProgress } from "@autodev/shared";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 interface LeaderboardEntry {
   rank: number;
@@ -49,8 +48,8 @@ export default function TeamPage() {
     try {
       setLoading(true);
       const [teamRes, lbRes] = await Promise.all([
-        fetch(`${API_BASE}/progress/${owner}/${repo}/team`),
-        fetch(`${API_BASE}/progress/${owner}/${repo}/leaderboard`),
+        fetch(`${getApiBase(decodedRepoId)}/progress/${owner}/${repo}/team`),
+        fetch(`${getApiBase(decodedRepoId)}/progress/${owner}/${repo}/leaderboard`),
       ]);
 
       if (!teamRes.ok) throw new Error(`Team HTTP ${teamRes.status}`);
