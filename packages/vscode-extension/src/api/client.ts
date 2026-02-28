@@ -26,11 +26,18 @@ export async function getArchitecture(owner: string, repo: string) {
 }
 
 export async function getWalkthroughs(owner: string, repo: string) {
-  return apiCall(`/analysis/${owner}/${repo}/walkthroughs`);
+  return apiCall(`/walkthroughs/${owner}/${repo}`);
+}
+
+export async function generateWalkthrough(owner: string, repo: string, question: string) {
+  return apiCall(`/walkthroughs/${owner}/${repo}`, {
+    method: "POST",
+    body: { question },
+  });
 }
 
 export async function getConventions(owner: string, repo: string) {
-  return apiCall(`/analysis/${owner}/${repo}/conventions`);
+  return apiCall(`/conventions/${owner}/${repo}`);
 }
 
 export async function askQuestion(

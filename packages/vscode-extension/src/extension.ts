@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { CodebaseExplorerProvider } from "./panels/CodebaseExplorer";
 import { QAPanel } from "./panels/QAPanel";
+import { WalkthroughPanel } from "./panels/WalkthroughPanel";
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("AutoDev extension activated");
@@ -37,8 +38,14 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(
           `AutoDev: Generating walkthrough for "${question}"...`
         );
-        // TODO: Call backend API and display walkthrough panel
+        WalkthroughPanel.createOrShow(context.extensionUri);
       }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("autodev.showWalkthroughs", () => {
+      WalkthroughPanel.createOrShow(context.extensionUri);
     })
   );
 

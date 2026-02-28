@@ -15,4 +15,10 @@ export type {
   Convention,
   QAResponse,
   AnalysisResult,
+  SetupStep,
+  SetupConflict,
+  MissingPiece,
+  EnvVariable,
+  DockerSupport,
+  EnvSetupGuide,
 } from "./types/analysis.js";
