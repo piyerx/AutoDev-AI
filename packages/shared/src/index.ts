@@ -21,4 +21,11 @@ export type {
   EnvVariable,
   DockerSupport,
   EnvSetupGuide,
+  AnimationSequence,
+  AnimationStep,
+  SupportedLanguage,
+  LanguageOption,
+  TranslatedContent,
+  EmbeddingResult,
+  SemanticSearchResult,
 } from "./types/analysis.js";

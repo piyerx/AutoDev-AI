@@ -2,18 +2,17 @@
 > Written by AI when quota approaches or /checkpoint is called.
 > On resume: read this first, then continue from "Resume From".
 
-**Status:** Milestones 1-3 Complete — Ready for Milestone 4
-**Date:** 2026-02-28
+**Status:** Milestones 1-5 Complete — Ready for Milestone 6
+**Date:** 2026-03-01
 
 ---
 
 ## Resume From
-Milestone 4: Walkthroughs + Conventions. Need to:
-1. Create walkthrough generation prompt + endpoint
-2. Create convention detection prompt + endpoint
-3. Wire GitHub App PR handler for onboarding impact comments
-4. Build walkthrough viewer + convention card components
-5. Create walkthroughs page in frontend + VS Code panel
+Milestone 6: Testing + Skill Tracker. Need to:
+1. Add unit/integration tests for backend services and routes
+2. Build skill tracker (track developer onboarding progress)
+3. Add test coverage for frontend components
+4. Add VS Code extension tests
 
 ## Completed So Far
 - **Milestone 1 (Foundation)** — fully done
@@ -41,10 +40,32 @@ Milestone 4: Walkthroughs + Conventions. Need to:
   - Q&A chat page with related questions, relevant files, auto-scroll
   - VS Code QAPanel with real Bedrock API calls
   - Internal ingest endpoint for GitHub App
+- **Milestone 4 (Walkthroughs + Conventions + Env Setup)** — fully done
+  - Walkthrough generation prompts + routes (list, generate, get by ID)
+  - Convention detection prompts + routes (list, trigger detection)
+  - Environment setup analysis (envAnalyzer, envSetup route)
+  - PR onboarding impact comments via GitHub App
+  - WalkthroughViewer, ConventionCard, EnvSetupGuide components
+  - Frontend pages: walkthroughs, conventions, env-setup
+  - VS Code WalkthroughPanel with step navigation
+- **Milestone 5 (Animated Walkthroughs + Multi-Language + Semantic Search)** — fully done
+  - `services/cache.ts` — DynamoDB-backed TTL cache with cacheThroughAsync
+  - `services/i18n.ts` — Multi-language translation (7 Indic languages via Bedrock Haiku)
+  - `services/embeddings.ts` — Titan v2 embeddings with chunking
+  - `services/semanticSearch.ts` — Cosine similarity search with S3-cached embeddings
+  - `prompts/animatedFlow.ts` — Animation sequence + node explanation prompts
+  - `routes/animated.ts` — GET sequences, POST generate, POST explain-node
+  - `routes/i18n.ts` — GET languages, POST translate, POST batch
+  - `routes/qa.ts` — Upgraded with semantic search + i18n translation
+  - `AnimatedArchitectureMap.tsx` — React Flow animated (playback, glow effects, explanations)
+  - `LanguageSelector.tsx` — 7-language picker with fresher mode toggle
+  - `animated/page.tsx` — Full animated walkthrough page
+  - All 6 sidebar navs updated with "Animated Map" link
+  - `providers/CodeLensProvider.ts` — Architecture annotations on source files
+  - `extension.ts` — CodeLensProvider + showNodeDetail/selectLanguage/refreshCodeLens commands
+  - `package.json` — 3 new commands + autodev.language/fresherMode/repoId settings
 
 ## Remaining
-- Milestone 4: Walkthroughs + Conventions (Day 4)
-- Milestone 5: Polish + Semantic Search (Day 5)
 - Milestone 6: Testing + Skill Tracker (Day 6)
 - Milestone 7: Demo Day (Day 7)
 

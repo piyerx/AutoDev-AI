@@ -4,13 +4,20 @@ import { answerQuestion } from "../services/bedrock.js";
 import { cacheQA, getCachedQA } from "../services/dynamodb.js";
 import { getArchitectureAnalysis } from "../services/analysisOrchestrator.js";
 import { getLatestCodeIndex } from "../services/s3.js";
+import { searchCodebase } from "../services/semanticSearch.js";
+import { translateContent } from "../services/i18n.js";
+import type { SupportedLanguage } from "@autodev/shared";
 
 export const qaRoutes: RouterType = Router();
 
 // POST /api/qa/:owner/:repo — ask a question about the codebase
 qaRoutes.post("/:owner/:repo", async (req, res) => {
   const repoId = `${req.params.owner}/${req.params.repo}`;
-  const { question } = req.body as { question: string };
+  const { question, language, fresherMode } = req.body as {
+    question: string;
+    language?: SupportedLanguage;
+    fresherMode?: boolean;
+  };
 
   if (!question) {
     res.status(400).json({ error: "question is required" });
@@ -19,7 +26,11 @@ qaRoutes.post("/:owner/:repo", async (req, res) => {
 
   try {
     // Check cache first
-    const questionHash = createHash("sha256").update(question.toLowerCase().trim()).digest("hex").slice(0, 16);
+    const cachePrefix = `${language || "en"}:${fresherMode ? "fresher:" : ""}`;
+    const questionHash = createHash("sha256")
+      .update(`${cachePrefix}${question.toLowerCase().trim()}`)
+      .digest("hex")
+      .slice(0, 16);
     const cached = await getCachedQA(repoId, questionHash);
     if (cached) {
       res.json({ repoId, question, ...cached, fromCache: true });
@@ -32,14 +43,30 @@ qaRoutes.post("/:owner/:repo", async (req, res) => {
       ? JSON.stringify(architecture, null, 2)
       : "No architecture analysis available yet.";
 
-    // Get relevant source files (simple approach: send top files)
-    const files = await getLatestCodeIndex(repoId);
-    const relevantFiles = files
-      ? files
-          .slice(0, 20)
-          .map((f) => `--- ${f.path} ---\n${f.content.slice(0, 3000)}`)
-          .join("\n\n")
-      : "No source files available.";
+    // Semantic search for relevant files (replaces naive top-20 approach)
+    let relevantFiles: string;
+    try {
+      const searchResults = await searchCodebase(repoId, question, 10);
+      if (searchResults.length > 0) {
+        relevantFiles = searchResults
+          .map(
+            (r) =>
+              `--- ${r.path} (score: ${r.score.toFixed(3)}) ---\n${r.content.slice(0, 3000)}`
+          )
+          .join("\n\n");
+      } else {
+        throw new Error("No semantic results");
+      }
+    } catch {
+      // Fallback to naive approach if embeddings aren't ready
+      const files = await getLatestCodeIndex(repoId);
+      relevantFiles = files
+        ? files
+            .slice(0, 20)
+            .map((f) => `--- ${f.path} ---\n${f.content.slice(0, 3000)}`)
+            .join("\n\n")
+        : "No source files available.";
+    }
 
     // Call Bedrock
     const rawAnswer = await answerQuestion(question, architectureContext, relevantFiles);
@@ -54,6 +81,34 @@ qaRoutes.post("/:owner/:repo", async (req, res) => {
       parsed = JSON.parse(cleaned);
     } catch {
       parsed = { answer: rawAnswer, relevantFiles: [], relatedQuestions: [] };
+    }
+
+    // Translate if a non-English language is requested
+    if (language && language !== "en") {
+      try {
+        const translated = await translateContent(
+          parsed.answer,
+          language,
+          repoId,
+          fresherMode ?? false
+        );
+        parsed.translatedAnswer = translated.translatedText;
+        parsed.language = language;
+      } catch {
+        // Keep English answer on translation failure
+      }
+    } else if (fresherMode) {
+      try {
+        const simplified = await translateContent(
+          parsed.answer,
+          "en",
+          repoId,
+          true
+        );
+        parsed.fresherAnswer = simplified.translatedText;
+      } catch {
+        // Keep original answer
+      }
     }
 
     // Cache the result

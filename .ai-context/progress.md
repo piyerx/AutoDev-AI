@@ -2,7 +2,7 @@
 > Updated by AI at end of every session. Open this to see project state without launching any AI tool.
 
 **Last Updated:** 2026-03-01
-**Status:** 🟢 Milestone 4 Complete — Walkthroughs + Conventions + Env Setup Built
+**Status:** 🟢 Milestone 5 Complete — Animated Walkthroughs + Multi-Language + Semantic Search
 
 ---
 
@@ -50,12 +50,30 @@
   - Frontend pages: walkthroughs, conventions, env-setup (all with sidebar nav)
   - VS Code `WalkthroughPanel.ts` — webview with list, generation, step-by-step navigation
   - Sidebar updated with Conventions + Env Setup links
+- **Milestone 5: Animated Walkthroughs + Multi-Language + Semantic Search**
+  - `shared/types/analysis.ts` — AnimationSequence, AnimationStep, SupportedLanguage, LanguageOption, TranslatedContent, EmbeddingResult, SemanticSearchResult types
+  - `services/cache.ts` — Generic DynamoDB-backed cache with TTL, SHA-256 keys, cacheThroughAsync
+  - `services/i18n.ts` — Multi-language translation via Bedrock Haiku (7 Indic languages), batch support
+  - `services/embeddings.ts` — Titan v2 embeddings, chunking, batch processing
+  - `services/semanticSearch.ts` — Cosine similarity search, S3-cached embeddings, searchCodebase
+  - `prompts/animatedFlow.ts` — Animation sequence + node explanation prompts
+  - `routes/animated.ts` — GET sequences, POST generate, POST explain-node
+  - `routes/i18n.ts` — GET languages, POST translate, POST batch
+  - `routes/qa.ts` — Integrated semantic search (10 results w/ fallback) + i18n translation
+  - `index.ts` — 9 total route mounts (added animated + i18n)
+  - `AnimatedArchitectureMap.tsx` — React Flow animated component (playback, step nav, glow effects, explanations)
+  - `LanguageSelector.tsx` — Language picker w/ 7 languages, fresher mode toggle, compact/full variant
+  - `animated/page.tsx` — Full animated walkthrough page with language selection, node explanations
+  - All 6 sidebar navigations updated with "Animated Map" link
+  - `providers/CodeLensProvider.ts` — Architecture annotations on source files (type emoji, description, connections)
+  - `api/client.ts` — 6 new API functions (animation sequences, node explanations, i18n)
+  - `extension.ts` — Registered CodeLensProvider, showNodeDetail/selectLanguage/refreshCodeLens commands
+  - `package.json` — 3 new commands + configuration (repoId, language, fresherMode settings)
 
 ## 🔄 In Progress
 - (none)
 
 ## 📋 Up Next
-- [ ] Milestone 5: Polish + Semantic Search
 - [ ] Milestone 6: Testing + Skill Tracker
 - [ ] Milestone 7: Demo Day
 
@@ -84,11 +102,15 @@
 | .ai-context/progress.md | This file — project state summary |
 | packages/backend/src/index.ts | Express app entry point |
 | packages/backend/src/services/ | Bedrock, DynamoDB, S3, analysisOrchestrator |
-| packages/backend/src/prompts/ | AI prompts (architecture, walkthrough, conventions, envSetup) |
-| packages/backend/src/routes/ | API routes (repos, analysis, qa, internal, walkthroughs, conventions, envSetup) |
+| packages/backend/src/prompts/ | AI prompts (architecture, walkthrough, conventions, envSetup, animatedFlow) |
+| packages/backend/src/routes/ | API routes (repos, analysis, qa, internal, walkthroughs, conventions, envSetup, animated, i18n) |
 | packages/backend/src/services/envAnalyzer.ts | Environment setup analysis service |
-| packages/frontend/src/app/ | Next.js pages (dashboard, walkthroughs, conventions, env-setup) |
-| packages/frontend/src/components/ | ArchitectureMap, WalkthroughViewer, ConventionCard, EnvSetupGuide |
+| packages/backend/src/services/cache.ts | DynamoDB-backed TTL cache service |
+| packages/backend/src/services/i18n.ts | Multi-language translation service |
+| packages/backend/src/services/embeddings.ts | Titan v2 embeddings service |
+| packages/backend/src/services/semanticSearch.ts | Cosine similarity semantic search |
+| packages/frontend/src/app/ | Next.js pages (dashboard, walkthroughs, conventions, env-setup, animated) |
+| packages/frontend/src/components/ | ArchitectureMap, AnimatedArchitectureMap, LanguageSelector, WalkthroughViewer, ConventionCard, EnvSetupGuide |
 | packages/github-app/src/ | Probot webhook handlers (installation, push, PR onboarding) |
-| packages/vscode-extension/src/ | VS Code extension (CodebaseExplorer, QAPanel, WalkthroughPanel) |
+| packages/vscode-extension/src/ | VS Code extension (CodebaseExplorer, QAPanel, WalkthroughPanel, CodeLensProvider) |
 | infrastructure/template.yaml | AWS SAM template |

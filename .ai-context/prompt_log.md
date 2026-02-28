@@ -72,3 +72,29 @@
 - Updated `extension.ts` — Wired WalkthroughPanel to startWalkthrough command + new showWalkthroughs command
 - Fixed `api/client.ts` — Corrected walkthrough/convention API URLs + added generateWalkthrough function
 **Next:** Milestone 5 — Polish + Semantic Search
+---
+<!-- AI appends new entries below -->
+
+### [MILESTONE 5: ANIMATED WALKTHROUGHS + MULTI-LANGUAGE] ✅ COMPLETED
+**Prompt:** Build Milestone 5 — Animated Visual Walkthroughs, Multi-Language Support, Semantic Search, Caching, CodeLens
+**Changes:**
+- Updated `shared/types/analysis.ts` — AnimationSequence, AnimationStep, SupportedLanguage, LanguageOption, TranslatedContent, EmbeddingResult, SemanticSearchResult types
+- Created `services/cache.ts` — Generic DynamoDB-backed cache (TTL-based, SHA-256 keys, cacheThroughAsync)
+- Created `services/i18n.ts` — Multi-language translation via Bedrock Haiku (7 Indic languages + English, batch support)
+- Created `services/embeddings.ts` — Titan v2 embeddings, chunking, batch processing
+- Created `services/semanticSearch.ts` — Cosine similarity search, S3-cached embeddings, searchCodebase
+- Created `prompts/animatedFlow.ts` — ANIMATED_FLOW_SYSTEM_PROMPT, NODE_EXPLANATION prompts
+- Created `routes/animated.ts` — GET sequences, POST generate, POST explain-node endpoints
+- Created `routes/i18n.ts` — GET languages, POST translate, POST batch endpoints
+- Updated `routes/qa.ts` — Integrated semantic search (10 results w/ fallback) + i18n translation
+- Updated `index.ts` — Registered animated + i18n route mounts (9 total routes)
+- Created `AnimatedArchitectureMap.tsx` — React Flow animated component (playback, step nav, glow effects, explanation cards)
+- Created `LanguageSelector.tsx` — Language picker with 7 languages, fresher mode toggle, compact/full variants
+- Created `animated/page.tsx` — Full animated walkthrough page with language selection, node explanations
+- Updated all 6 sidebar navigations with "Animated Map" link (fixed QA page incomplete sidebar)
+- Created `providers/CodeLensProvider.ts` — Architecture annotations on source files (type emoji, description, connections)
+- Updated `api/client.ts` — Added 6 new API functions (animation sequences, node explanations, i18n)
+- Updated `extension.ts` — Registered CodeLensProvider, added showNodeDetail/selectLanguage/refreshCodeLens commands
+- Updated `package.json` — Added 3 new commands + configuration (repoId, language, fresherMode settings)
+**Next:** Milestone 6 — Testing + Skill Tracker
+---

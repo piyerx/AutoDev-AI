@@ -43,10 +43,55 @@ export async function getConventions(owner: string, repo: string) {
 export async function askQuestion(
   owner: string,
   repo: string,
-  question: string
+  question: string,
+  language: string = "en",
+  fresherMode: boolean = false
 ) {
   return apiCall(`/qa/${owner}/${repo}`, {
     method: "POST",
-    body: { question },
+    body: { question, language, fresherMode },
+  });
+}
+
+export async function getAnimationSequences(owner: string, repo: string) {
+  return apiCall(`/animated/${owner}/${repo}`);
+}
+
+export async function generateAnimationSequences(
+  owner: string,
+  repo: string,
+  fresherMode: boolean = false
+) {
+  return apiCall(`/animated/${owner}/${repo}/generate`, {
+    method: "POST",
+    body: { fresherMode },
+  });
+}
+
+export async function explainNode(
+  owner: string,
+  repo: string,
+  nodeId: string,
+  fresherMode: boolean = false
+) {
+  return apiCall(`/animated/${owner}/${repo}/explain-node`, {
+    method: "POST",
+    body: { nodeId, fresherMode },
+  });
+}
+
+export async function getSupportedLanguages() {
+  return apiCall(`/i18n/languages`);
+}
+
+export async function translateText(
+  text: string,
+  targetLanguage: string,
+  repoId: string,
+  fresherMode: boolean = false
+) {
+  return apiCall(`/i18n/translate`, {
+    method: "POST",
+    body: { text, targetLanguage, repoId, fresherMode },
   });
 }

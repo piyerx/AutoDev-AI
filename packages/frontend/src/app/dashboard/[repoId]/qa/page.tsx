@@ -87,6 +87,26 @@ export default function QAPage() {
             </a>
           </li>
           <li>
+            <a href={`/dashboard/${repoId}/animated`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Animated Map
+            </a>
+          </li>
+          <li>
+            <a href={`/dashboard/${repoId}/walkthroughs`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Walkthroughs
+            </a>
+          </li>
+          <li>
+            <a href={`/dashboard/${repoId}/conventions`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Conventions
+            </a>
+          </li>
+          <li>
+            <a href={`/dashboard/${repoId}/env-setup`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Env Setup
+            </a>
+          </li>
+          <li>
             <a href={`/dashboard/${repoId}/qa`} className="block px-3 py-2 rounded-lg bg-gray-800 text-white text-sm">
               Q&A
             </a>

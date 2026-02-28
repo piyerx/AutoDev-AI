@@ -23,6 +23,18 @@
       {
         "command": "autodev.startWalkthrough",
         "title": "AutoDev: Start Walkthrough"
+      },
+      {
+        "command": "autodev.showNodeDetail",
+        "title": "AutoDev: Show Module Detail"
+      },
+      {
+        "command": "autodev.refreshCodeLens",
+        "title": "AutoDev: Refresh Architecture Annotations"
+      },
+      {
+        "command": "autodev.selectLanguage",
+        "title": "AutoDev: Select Language"
       }
     ],
     "viewsContainers": {
@@ -42,6 +54,36 @@
           "name": "Codebase Explorer"
         }
       ]
+    },
+    "configuration": {
+      "title": "AutoDev",
+      "properties": {
+        "autodev.repoId": {
+          "type": "string",
+          "default": "",
+          "description": "Repository identifier (owner/repo) for AutoDev"
+        },
+        "autodev.language": {
+          "type": "string",
+          "default": "en",
+          "enum": ["en", "hi", "ta", "te", "kn", "bn", "mr"],
+          "enumDescriptions": [
+            "English",
+            "Hindi (हिन्दी)",
+            "Tamil (தமிழ்)",
+            "Telugu (తెలుగు)",
+            "Kannada (ಕನ್ನಡ)",
+            "Bengali (বাংলা)",
+            "Marathi (मराठी)"
+          ],
+          "description": "Language for AI-generated explanations"
+        },
+        "autodev.fresherMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable simpler explanations for beginners"
+        }
+      }
     }
   },
   "scripts": {

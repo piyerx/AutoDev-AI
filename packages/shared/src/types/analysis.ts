@@ -118,6 +118,60 @@ export interface EnvSetupGuide {
   summary: string;
 }
 
+// --- Animated Flow Types ---
+
+export interface AnimationSequence {
+  id: string;
+  title: string;
+  description: string;
+  category: "request-flow" | "data-pipeline" | "auth-flow" | "module-explainer" | "custom";
+  steps: AnimationStep[];
+  estimatedDuration: number; // seconds
+}
+
+export interface AnimationStep {
+  stepNumber: number;
+  nodeId: string;
+  label: string;
+  explanation: string;
+  highlightEdges?: string[]; // edge IDs to highlight
+  duration: number; // ms to stay on this step
+  fresherExplanation?: string;
+}
+
+// --- Multi-Language Types ---
+
+export type SupportedLanguage = "en" | "hi" | "ta" | "te" | "kn" | "bn" | "mr";
+
+export interface LanguageOption {
+  code: SupportedLanguage;
+  name: string;
+  nativeName: string;
+}
+
+export interface TranslatedContent {
+  language: SupportedLanguage;
+  originalText: string;
+  translatedText: string;
+  isFresherMode: boolean;
+}
+
+// --- Embedding Types ---
+
+export interface EmbeddingResult {
+  path: string;
+  content: string;
+  embedding: number[];
+  chunkIndex: number;
+}
+
+export interface SemanticSearchResult {
+  path: string;
+  content: string;
+  score: number;
+  lineRange?: { start: number; end: number };
+}
+
 export interface AnalysisResult {
   repoId: string;
   analysisType: "architecture" | "conventions" | "walkthrough" | "env-setup";

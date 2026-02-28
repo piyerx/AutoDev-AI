@@ -82,6 +82,11 @@ export default function WalkthroughsPage() {
             </a>
           </li>
           <li>
+            <a href={`/dashboard/${repoId}/animated`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Animated Map
+            </a>
+          </li>
+          <li>
             <a href={`/dashboard/${repoId}/walkthroughs`} className="block px-3 py-2 rounded-lg bg-gray-800 text-white text-sm">
               Walkthroughs
             </a>
