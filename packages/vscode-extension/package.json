@@ -1,0 +1,60 @@
+{
+  "name": "autodev-vscode",
+  "displayName": "AutoDev - Codebase Onboarding AI",
+  "description": "AI-powered codebase onboarding: architecture maps, walkthroughs, Q&A",
+  "version": "0.1.0",
+  "publisher": "autodev",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autodev.showExplorer",
+        "title": "AutoDev: Show Codebase Explorer"
+      },
+      {
+        "command": "autodev.askQuestion",
+        "title": "AutoDev: Ask About This Codebase"
+      },
+      {
+        "command": "autodev.startWalkthrough",
+        "title": "AutoDev: Start Walkthrough"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "autodev",
+          "title": "AutoDev",
+          "icon": "$(compass)"
+        }
+      ]
+    },
+    "views": {
+      "autodev": [
+        {
+          "type": "webview",
+          "id": "autodev.explorerView",
+          "name": "Codebase Explorer"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "dev": "pnpm build --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No linter configured yet'",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.90.0",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0"
+  }
+}

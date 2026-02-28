@@ -1,0 +1,15 @@
+{
+  "name": "@autodev/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No linter configured yet'"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

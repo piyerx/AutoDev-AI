@@ -1,0 +1,194 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AutoDev - AI-powered codebase onboarding platform
+
+Globals:
+  Function:
+    Timeout: 300
+    Runtime: nodejs20.x
+    MemorySize: 512
+    Environment:
+      Variables:
+        AWS_REGION_NAME: !Ref AWS::Region
+        USERS_TABLE: !Ref UsersTable
+        REPOS_TABLE: !Ref ReposTable
+        ANALYSIS_TABLE: !Ref AnalysisTable
+        QA_CACHE_TABLE: !Ref QACacheTable
+        S3_BUCKET: !Ref CodebaseIndexBucket
+
+Resources:
+  # --- API Gateway ---
+  AutoDevApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  # --- Lambda Functions ---
+  WebhookHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: autodev-webhook-handler
+      Handler: index.handler
+      CodeUri: ../packages/github-app/dist/
+      Description: Handles GitHub webhook events
+      Events:
+        Webhook:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AutoDevApi
+            Path: /webhooks/github
+            Method: POST
+
+  AnalysisOrchestrator:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: autodev-analysis-orchestrator
+      Handler: index.handler
+      CodeUri: ../packages/backend/dist/
+      Description: Orchestrates codebase analysis via Bedrock
+      Timeout: 900
+      MemorySize: 1024
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource: !Sub "${CodebaseIndexBucket.Arn}/*"
+            - Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:Query
+                - dynamodb:UpdateItem
+              Resource:
+                - !GetAtt ReposTable.Arn
+                - !GetAtt AnalysisTable.Arn
+                - !GetAtt QACacheTable.Arn
+
+  QAHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: autodev-qa-handler
+      Handler: index.handler
+      CodeUri: ../packages/backend/dist/
+      Description: Handles Q&A requests via Bedrock
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource: !Sub "${CodebaseIndexBucket.Arn}/*"
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:Query
+                - dynamodb:PutItem
+              Resource:
+                - !GetAtt AnalysisTable.Arn
+                - !GetAtt QACacheTable.Arn
+
+  # --- DynamoDB Tables ---
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: autodev-users
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+
+  ReposTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: autodev-repos
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: repoId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: repoId
+          KeyType: HASH
+        - AttributeName: userId
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: userId-index
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  AnalysisTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: autodev-analysis
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: repoId
+          AttributeType: S
+        - AttributeName: analysisType
+          AttributeType: S
+      KeySchema:
+        - AttributeName: repoId
+          KeyType: HASH
+        - AttributeName: analysisType
+          KeyType: RANGE
+
+  QACacheTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: autodev-qa-cache
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: repoId
+          AttributeType: S
+        - AttributeName: questionHash
+          AttributeType: S
+      KeySchema:
+        - AttributeName: repoId
+          KeyType: HASH
+        - AttributeName: questionHash
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+  # --- S3 Bucket ---
+  CodebaseIndexBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "autodev-codebase-${AWS::AccountId}"
+      LifecycleConfiguration:
+        Rules:
+          - Id: CleanupOldIndexes
+            Status: Enabled
+            ExpirationInDays: 30
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway URL
+    Value: !Sub "https://${AutoDevApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+  WebhookUrl:
+    Description: GitHub Webhook URL
+    Value: !Sub "https://${AutoDevApi}.execute-api.${AWS::Region}.amazonaws.com/dev/webhooks/github"
+  CodebaseIndexBucket:
+    Description: S3 bucket for codebase indexes
+    Value: !Ref CodebaseIndexBucket

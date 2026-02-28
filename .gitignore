@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.next/
+.env
+.env.local
+*.vsix
+.aws-sam/
+.DS_Store
+coverage/
+*.log

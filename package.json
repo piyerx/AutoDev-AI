@@ -1,0 +1,18 @@
+{
+  "name": "autodev",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-powered codebase onboarding platform",
+  "scripts": {
+    "dev:backend": "pnpm --filter @autodev/backend dev",
+    "dev:frontend": "pnpm --filter @autodev/frontend dev",
+    "dev:github-app": "pnpm --filter @autodev/github-app dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add README.md)",
+      "Bash(git commit -m \"docs: rewrite README — 6 tools covered, big project guide, reference folder, improvements table\")",
+      "Bash(git push)",
+      "Bash(timeout 10 pnpm dev:frontend)"
+    ]
+  }
+}
