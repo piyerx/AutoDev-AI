@@ -1,8 +1,8 @@
 # Project Progress
 > Updated by AI at end of every session. Open this to see project state without launching any AI tool.
 
-**Last Updated:** 2026-03-01
-**Status:** 🟢 Milestone 5 Complete — Animated Walkthroughs + Multi-Language + Semantic Search
+**Last Updated:** 2026-03-02
+**Status:** 🟢 Milestone 6 Complete — Learning Progress + Skill Tracker + Tests (44 tests passing)
 
 ---
 
@@ -69,12 +69,23 @@
   - `api/client.ts` — 6 new API functions (animation sequences, node explanations, i18n)
   - `extension.ts` — Registered CodeLensProvider, showNodeDetail/selectLanguage/refreshCodeLens commands
   - `package.json` — 3 new commands + configuration (repoId, language, fresherMode settings)
+- **Milestone 6: Learning Progress + Skill Tracker + Tests**
+  - `shared/types/analysis.ts` — SkillArea (9 areas), SkillScore, ProgressEvent, DeveloperProgress, ProgressSnapshot, TeamProgress
+  - `services/progressTracker.ts` (383 lines) — MODULE_AREA_MAP, classifyArea, getAreasFromArchitecture, recordProgressEvent, getProgressEvents, computeSkillScores, computeDeveloperProgress, getRepoUserIds, computeTeamProgress
+  - `routes/skillTracker.ts` — 5 endpoints (POST event, GET progress, GET events, GET team, GET leaderboard)
+  - `SkillRadar.tsx` — SVG radar chart with area labels, score polygons, color legend
+  - `ProgressTimeline.tsx` — Score display, gradient bar, SVG area chart, event list
+  - `ModuleCompletionGrid.tsx` — 4-col summary stats, module cards with progress bars, icons
+  - `progress/page.tsx` — Learning progress dashboard with all 3 components, 30s auto-refresh
+  - `team/page.tsx` — Team progress with leaderboard, selected member detail
+  - All 8 sidebar pages updated with "My Progress" and "Team" nav links
+  - Backend tests: 29 tests (vitest) — classifyArea, getAreasFromArchitecture, computeSkillScores, computeDeveloperProgress, edge cases
+  - Frontend tests: 15 tests (vitest + @testing-library/react) — SkillRadar, ProgressTimeline, ModuleCompletionGrid
 
 ## 🔄 In Progress
 - (none)
 
 ## 📋 Up Next
-- [ ] Milestone 6: Testing + Skill Tracker
 - [ ] Milestone 7: Demo Day
 
 ---
@@ -103,7 +114,16 @@
 | packages/backend/src/index.ts | Express app entry point |
 | packages/backend/src/services/ | Bedrock, DynamoDB, S3, analysisOrchestrator |
 | packages/backend/src/prompts/ | AI prompts (architecture, walkthrough, conventions, envSetup, animatedFlow) |
-| packages/backend/src/routes/ | API routes (repos, analysis, qa, internal, walkthroughs, conventions, envSetup, animated, i18n) |
+| packages/backend/src/routes/ | API routes (repos, analysis, qa, internal, walkthroughs, conventions, envSetup, animated, i18n, skillTracker) |
+| packages/backend/src/services/progressTracker.ts | Learning progress + skill scoring engine |
+| packages/backend/src/routes/skillTracker.ts | Progress API (5 endpoints) |
+| packages/backend/src/__tests__/progressTracker.test.ts | 29 backend tests |
+| packages/frontend/src/components/SkillRadar.tsx | SVG radar chart component |
+| packages/frontend/src/components/ProgressTimeline.tsx | Score display + area chart |
+| packages/frontend/src/components/ModuleCompletionGrid.tsx | Module cards + summary stats |
+| packages/frontend/src/app/dashboard/[repoId]/progress/page.tsx | Learning progress dashboard |
+| packages/frontend/src/app/dashboard/[repoId]/team/page.tsx | Team progress + leaderboard |
+| packages/frontend/src/__tests__/ | 15 frontend component tests |
 | packages/backend/src/services/envAnalyzer.ts | Environment setup analysis service |
 | packages/backend/src/services/cache.ts | DynamoDB-backed TTL cache service |
 | packages/backend/src/services/i18n.ts | Multi-language translation service |

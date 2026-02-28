@@ -10,6 +10,7 @@ import { conventionRoutes } from "./routes/conventions.js";
 import { envSetupRoutes } from "./routes/envSetup.js";
 import { animatedRoutes } from "./routes/animated.js";
 import { i18nRoutes } from "./routes/i18n.js";
+import { skillTrackerRoutes } from "./routes/skillTracker.js";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -32,6 +33,7 @@ app.use("/api/conventions", conventionRoutes);
 app.use("/api/env-setup", envSetupRoutes);
 app.use("/api/animated", animatedRoutes);
 app.use("/api/i18n", i18nRoutes);
+app.use("/api/progress", skillTrackerRoutes);
 
 app.listen(PORT, () => {
   console.log(`AutoDev backend running on http://localhost:${PORT}`);

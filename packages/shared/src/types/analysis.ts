@@ -180,3 +180,57 @@ export interface AnalysisResult {
   generatedAt: string;
   modelUsed: string;
 }
+
+// --- Skill Tracker / Progress Types ---
+
+export type SkillArea = "architecture" | "api" | "auth" | "database" | "frontend" | "infrastructure" | "testing" | "devops" | "other";
+
+export interface SkillScore {
+  area: SkillArea;
+  score: number; // 0-100
+  modulesExplored: number;
+  totalModules: number;
+  lastActivity: string;
+}
+
+export interface ProgressEvent {
+  id: string;
+  userId: string;
+  repoId: string;
+  eventType: "walkthrough_viewed" | "qa_asked" | "module_explored" | "convention_viewed" | "env_setup_viewed" | "animated_viewed";
+  targetId?: string; // walkthrough ID, module ID, etc.
+  targetLabel?: string;
+  area?: SkillArea;
+  timestamp: string;
+  durationMs?: number;
+}
+
+export interface DeveloperProgress {
+  userId: string;
+  repoId: string;
+  overallScore: number; // 0-100
+  skills: SkillScore[];
+  totalTimeSpentMs: number;
+  walkthroughsCompleted: number;
+  questionsAsked: number;
+  modulesExplored: number;
+  conventionsViewed: number;
+  firstActivity: string;
+  lastActivity: string;
+  timeline: ProgressSnapshot[];
+}
+
+export interface ProgressSnapshot {
+  timestamp: string;
+  overallScore: number;
+  eventDescription: string;
+}
+
+export interface TeamProgress {
+  repoId: string;
+  members: DeveloperProgress[];
+  averageScore: number;
+  averageTimeToOnboard: number; // ms
+  topAreas: SkillScore[];
+  weakAreas: SkillScore[];
+}
