@@ -24,4 +24,25 @@
 - Verified: backend starts on :3001, frontend starts on :3000, shared types compile
 
 ---
+
+### [MILESTONE 2: CORE INTEGRATION] ✅ COMPLETED
+**Prompt:** Implement Milestone 2 — wire Bedrock for real architecture analysis, connect GitHub App to S3, build React Flow architecture map, connect VS Code webviews to backend API
+**Changes:**
+- Enhanced `bedrock.ts` with two-pass analysis + parseJsonResponse helper
+- Enhanced `s3.ts` with getLatestCodeIndex, uploadCodeIndexWithLatest, getAnalysisOutput<T>
+- Enhanced `dynamodb.ts` with getRepoById, updateRepoStatus, listAllRepos
+- Created `analysisOrchestrator.ts` — full pipeline coordinator
+- Created `routes/internal.ts` — POST /api/internal/ingest endpoint
+- Rewired `routes/analysis.ts`, `routes/repos.ts`, `routes/qa.ts` with real implementations
+- Updated `index.ts` with internalRoutes mount + 50mb JSON limit
+- Rewired `github-app/handlers/installation.ts` and `push.ts` to fetch + POST to backend
+- Created `ArchitectureMap.tsx` — React Flow component with 7 node types, auto-layout, legend
+- Rewired `dashboard/page.tsx` with polling, error states, tech stack badges
+- Rewired `dashboard/[repoId]/page.tsx` with ArchitectureMap rendering, trigger buttons
+- Rewired `dashboard/[repoId]/qa/page.tsx` with related questions, relevant files, auto-scroll
+- Wired `QAPanel.ts` with real askQuestion API calls
+- Wired `CodebaseExplorer.ts` with getArchitecture API + dynamic HTML rendering
+- Updated `shared/analysis.ts` with database/external node types, entryPoints, keyPatterns
+
+---
 <!-- AI appends new entries below -->

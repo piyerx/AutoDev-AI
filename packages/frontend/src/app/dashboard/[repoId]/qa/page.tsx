@@ -1,19 +1,35 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+
+interface RelevantFile {
+  path: string;
+  lineRange?: { start: number; end: number };
+}
 
 interface Message {
   role: "user" | "assistant";
   content: string;
+  relevantFiles?: RelevantFile[];
+  relatedQuestions?: string[];
 }
 
 export default function QAPage() {
   const params = useParams();
   const repoId = params.repoId as string;
+  const decodedRepoId = decodeURIComponent(repoId);
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,18 +41,20 @@ export default function QAPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `http://localhost:3001/api/qa/${repoId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question }),
-        }
-      );
+      const res = await fetch(`${API_BASE}/qa/${decodedRepoId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
       const data = await res.json();
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.answer },
+        {
+          role: "assistant",
+          content: data.answer ?? data.error ?? "No response",
+          relevantFiles: data.relevantFiles,
+          relatedQuestions: data.relatedQuestions,
+        },
       ]);
     } catch {
       setMessages((prev) => [
@@ -48,6 +66,10 @@ export default function QAPage() {
     }
   }
 
+  function askFollowUp(question: string) {
+    setInput(question);
+  }
+
   return (
     <div className="min-h-screen">
       <nav className="fixed left-0 top-0 w-64 h-full bg-gray-900 border-r border-gray-800 p-6">
@@ -57,7 +79,7 @@ export default function QAPage() {
         >
           AutoDev
         </a>
-        <p className="text-sm text-gray-400 mb-4">{decodeURIComponent(repoId)}</p>
+        <p className="text-sm text-gray-400 mb-4">{decodedRepoId}</p>
         <ul className="space-y-1">
           <li>
             <a href={`/dashboard/${repoId}`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
@@ -79,21 +101,64 @@ export default function QAPage() {
           {messages.length === 0 && (
             <div className="text-center py-20">
               <p className="text-gray-400 text-lg mb-2">Ask anything about this codebase</p>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-sm mb-6">
                 Try: &quot;How is the project structured?&quot; or &quot;Where is the auth logic?&quot;
               </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {[
+                  "How is the project structured?",
+                  "What are the main entry points?",
+                  "What patterns does this codebase use?",
+                ].map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => askFollowUp(q)}
+                    className="text-xs px-3 py-1.5 border border-gray-700 rounded-full hover:bg-gray-800 text-gray-400 transition-colors"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
           {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`p-4 rounded-xl max-w-2xl ${
-                msg.role === "user"
-                  ? "bg-blue-600/20 border border-blue-800 ml-auto"
-                  : "bg-gray-900 border border-gray-800"
-              }`}
-            >
-              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+            <div key={i}>
+              <div
+                className={`p-4 rounded-xl max-w-2xl ${
+                  msg.role === "user"
+                    ? "bg-blue-600/20 border border-blue-800 ml-auto"
+                    : "bg-gray-900 border border-gray-800"
+                }`}
+              >
+                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+              </div>
+              {/* Relevant files */}
+              {msg.relevantFiles && msg.relevantFiles.length > 0 && (
+                <div className="mt-2 max-w-2xl">
+                  <p className="text-[10px] uppercase text-gray-500 mb-1">Relevant Files</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {msg.relevantFiles.map((f, j) => (
+                      <span key={j} className="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono">
+                        {f.path}{f.lineRange ? `:${f.lineRange.start}-${f.lineRange.end}` : ""}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Related questions */}
+              {msg.relatedQuestions && msg.relatedQuestions.length > 0 && (
+                <div className="mt-2 max-w-2xl flex flex-wrap gap-1.5">
+                  {msg.relatedQuestions.map((q, j) => (
+                    <button
+                      key={j}
+                      onClick={() => askFollowUp(q)}
+                      className="text-xs px-2.5 py-1 border border-gray-700 rounded-full hover:bg-gray-800 text-gray-400 transition-colors"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
           {loading && (
@@ -101,6 +166,7 @@ export default function QAPage() {
               <p className="text-sm text-gray-400 animate-pulse">Thinking...</p>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
 
         <form onSubmit={handleSubmit} className="flex gap-3">

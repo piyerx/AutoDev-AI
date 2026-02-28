@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { askQuestion } from "../api/client";
 
 export class QAPanel {
   public static currentPanel: QAPanel | undefined;
@@ -14,24 +15,51 @@ export class QAPanel {
     this._panel.webview.onDidReceiveMessage(
       async (message) => {
         switch (message.type) {
-          case "ask":
-            // TODO: Call backend API with message.question
-            this._panel.webview.postMessage({
-              type: "answer",
-              data: {
-                answer: `Analyzing your question: "${message.question}"...\n\nBackend API integration coming soon.`,
-                relevantFiles: [],
-                relatedQuestions: [
-                  "How is the project structured?",
-                  "What patterns does this codebase use?",
-                ],
-              },
-            });
+          case "ask": {
+            const repoId = this._getRepoId();
+            if (!repoId) {
+              this._panel.webview.postMessage({
+                type: "answer",
+                data: {
+                  answer: "No repository detected. Open a Git repository to use Q&A.",
+                  relevantFiles: [],
+                  relatedQuestions: [],
+                },
+              });
+              return;
+            }
+            const [owner, repo] = repoId.split("/");
+            try {
+              const response = await askQuestion(owner, repo, message.question) as {
+                answer: string;
+                relevantFiles?: { path: string; lineRange?: { start: number; end: number } }[];
+                relatedQuestions?: string[];
+              };
+              this._panel.webview.postMessage({
+                type: "answer",
+                data: {
+                  answer: response.answer,
+                  relevantFiles: response.relevantFiles ?? [],
+                  relatedQuestions: response.relatedQuestions ?? [],
+                },
+              });
+            } catch (err) {
+              this._panel.webview.postMessage({
+                type: "answer",
+                data: {
+                  answer: `Error: ${err instanceof Error ? err.message : "Failed to get a response. Is the backend running?"}`,
+                  relevantFiles: [],
+                  relatedQuestions: [],
+                },
+              });
+            }
             break;
-          case "openFile":
+          }
+          case "openFile": {
             const uri = vscode.Uri.file(message.path);
             await vscode.window.showTextDocument(uri);
             break;
+          }
         }
       },
       null,
@@ -66,6 +94,16 @@ export class QAPanel {
       const d = this._disposables.pop();
       if (d) d.dispose();
     }
+  }
+
+  private _getRepoId(): string | undefined {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders?.[0]) return undefined;
+    // Try to derive owner/repo from the git remote
+    // For now, use the workspace folder name as a fallback
+    return vscode.workspace
+      .getConfiguration("autodev")
+      .get<string>("repoId");
   }
 
   private _getHtmlContent(): string {

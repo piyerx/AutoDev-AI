@@ -43,6 +43,58 @@ export async function getCodeIndex(
   }
 }
 
+/**
+ * Get the latest code index for a repo (tries "latest" alias first).
+ */
+export async function getLatestCodeIndex(
+  repoId: string
+): Promise<{ path: string; content: string; size: number }[] | null> {
+  const key = `${repoId}/latest/index.json`;
+  try {
+    const result = await client.send(
+      new GetObjectCommand({ Bucket: BUCKET, Key: key })
+    );
+    const body = await result.Body?.transformToString();
+    return body ? JSON.parse(body) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Upload a code index and also write a "latest" alias.
+ */
+export async function uploadCodeIndexWithLatest(
+  repoId: string,
+  commitSha: string,
+  files: { path: string; content: string; size: number }[]
+) {
+  const body = JSON.stringify(files);
+  const opts = { ContentType: "application/json" };
+
+  // Write versioned copy
+  await client.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${repoId}/${commitSha}/index.json`,
+      Body: body,
+      ...opts,
+    })
+  );
+
+  // Write "latest" alias
+  await client.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${repoId}/latest/index.json`,
+      Body: body,
+      ...opts,
+    })
+  );
+
+  return `${repoId}/${commitSha}/index.json`;
+}
+
 export async function uploadAnalysisOutput(
   repoId: string,
   analysisType: string,
@@ -58,4 +110,20 @@ export async function uploadAnalysisOutput(
     })
   );
   return key;
+}
+
+export async function getAnalysisOutput<T = unknown>(
+  repoId: string,
+  analysisType: string
+): Promise<T | null> {
+  const key = `${repoId}/analysis/${analysisType}.json`;
+  try {
+    const result = await client.send(
+      new GetObjectCommand({ Bucket: BUCKET, Key: key })
+    );
+    const body = await result.Body?.transformToString();
+    return body ? (JSON.parse(body) as T) : null;
+  } catch {
+    return null;
+  }
 }

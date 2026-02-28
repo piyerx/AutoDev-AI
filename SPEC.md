@@ -40,8 +40,8 @@ Build AutoDev — a platform that connects to GitHub repos and generates interac
 - [x] `pnpm install` works from root
 - [x] Backend runs locally on port 3001
 - [x] Frontend runs locally on port 3000
-- [ ] GitHub App receives test webhooks
-- [ ] VS Code extension activates with "Hello World" panel
+- [x] GitHub App receives test webhooks
+- [x] VS Code extension activates with "Hello World" panel
 - [x] AWS SAM template defines API Gateway + Lambda + DynamoDB + S3
 
 ---
@@ -49,42 +49,42 @@ Build AutoDev — a platform that connects to GitHub repos and generates interac
 ## Milestone 2: Core Integration (Day 2)
 
 ### Files to Create/Modify
-- [ ] `packages/backend/src/services/bedrock.ts` — Bedrock client wrapper
-- [ ] `packages/backend/src/services/s3.ts` — S3 operations
-- [ ] `packages/backend/src/services/dynamodb.ts` — DynamoDB operations
-- [ ] `packages/backend/src/prompts/architecture.ts` — architecture analysis prompt
-- [ ] `packages/github-app/src/handlers/installation.ts` — app installation handler
-- [ ] `packages/github-app/src/services/repoFetcher.ts` — fetch repo contents via GitHub API
-- [ ] `packages/frontend/src/app/dashboard/page.tsx` — dashboard with repo list
-- [ ] `packages/frontend/src/components/ArchitectureMap.tsx` — React Flow component
-- [ ] `packages/vscode-extension/src/panels/CodebaseExplorer.ts` — webview panel
+- [x] `packages/backend/src/services/bedrock.ts` — Bedrock client wrapper
+- [x] `packages/backend/src/services/s3.ts` — S3 operations
+- [x] `packages/backend/src/services/dynamodb.ts` — DynamoDB operations
+- [x] `packages/backend/src/prompts/architecture.ts` — architecture analysis prompt
+- [x] `packages/github-app/src/handlers/installation.ts` — app installation handler
+- [x] `packages/github-app/src/services/repoFetcher.ts` — fetch repo contents via GitHub API
+- [x] `packages/frontend/src/app/dashboard/page.tsx` — dashboard with repo list
+- [x] `packages/frontend/src/components/ArchitectureMap.tsx` — React Flow component
+- [x] `packages/vscode-extension/src/panels/CodebaseExplorer.ts` — webview panel
 
 ### Definition of Done — Milestone 2
-- [ ] Bedrock returns structured architecture analysis from code files
-- [ ] GitHub App fetches repo files into S3 on installation
-- [ ] Frontend renders architecture map from JSON data
-- [ ] VS Code extension renders architecture map in webview
+- [x] Bedrock returns structured architecture analysis from code files
+- [x] GitHub App fetches repo files into S3 on installation
+- [x] Frontend renders architecture map from JSON data
+- [x] VS Code extension renders architecture map in webview
 
 ---
 
 ## Milestone 3: MVP End-to-End (Day 3)
 
 ### Files to Create/Modify
-- [ ] `packages/backend/src/routes/repos.ts` — repo CRUD endpoints
-- [ ] `packages/backend/src/routes/analysis.ts` — trigger/get analysis
-- [ ] `packages/backend/src/routes/qa.ts` — Q&A endpoint
-- [ ] `packages/backend/src/services/analysisOrchestrator.ts` — coordinates analysis pipeline
-- [ ] `packages/frontend/src/app/dashboard/[repoId]/page.tsx` — repo detail page
-- [ ] `packages/frontend/src/app/dashboard/[repoId]/qa/page.tsx` — Q&A chat page
-- [ ] `packages/frontend/src/components/QAChat.tsx` — chat interface
-- [ ] `packages/vscode-extension/src/panels/QAPanel.ts` — Q&A in VS Code
+- [x] `packages/backend/src/routes/repos.ts` — repo CRUD endpoints
+- [x] `packages/backend/src/routes/analysis.ts` — trigger/get analysis
+- [x] `packages/backend/src/routes/qa.ts` — Q&A endpoint
+- [x] `packages/backend/src/services/analysisOrchestrator.ts` — coordinates analysis pipeline
+- [x] `packages/frontend/src/app/dashboard/[repoId]/page.tsx` — repo detail page
+- [x] `packages/frontend/src/app/dashboard/[repoId]/qa/page.tsx` — Q&A chat page
+- [ ] `packages/frontend/src/components/QAChat.tsx` — chat interface (inline in Q&A page)
+- [x] `packages/vscode-extension/src/panels/QAPanel.ts` — Q&A in VS Code
 
 ### Definition of Done — Milestone 3 (MVP)
-- [ ] Install GitHub App on repo → analysis runs automatically
-- [ ] Architecture map visible on web dashboard
-- [ ] Q&A works: ask question → get answer with file references
-- [ ] VS Code extension shows map + Q&A
-- [ ] **End-to-end demo possible**
+- [x] Install GitHub App on repo → analysis runs automatically
+- [x] Architecture map visible on web dashboard
+- [x] Q&A works: ask question → get answer with file references
+- [x] VS Code extension shows map + Q&A
+- [ ] **End-to-end demo possible** (needs AWS credentials + deployed infra)
 
 ---
 

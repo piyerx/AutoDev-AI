@@ -1,7 +1,7 @@
 export interface ArchitectureNode {
   id: string;
   label: string;
-  type: "module" | "service" | "config" | "entry" | "util";
+  type: "module" | "service" | "config" | "entry" | "util" | "database" | "external";
   files: string[];
   description: string;
 }
@@ -17,6 +17,8 @@ export interface ArchitectureMap {
   edges: ArchitectureEdge[];
   techStack: Record<string, string>;
   summary: string;
+  entryPoints?: string[];
+  keyPatterns?: string[];
 }
 
 export interface Walkthrough {

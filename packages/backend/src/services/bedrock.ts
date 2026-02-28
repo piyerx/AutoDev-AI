@@ -2,6 +2,15 @@ import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from "@aws-sdk/client-bedrock-runtime";
+import type { ArchitectureMap } from "@autodev/shared";
+import {
+  ARCHITECTURE_SYSTEM_PROMPT,
+  ARCHITECTURE_PASS1_USER_PROMPT,
+  ARCHITECTURE_PASS2_USER_PROMPT,
+  buildFileTree,
+  buildConfigContents,
+  buildKeyFileContents,
+} from "../prompts/architecture.js";
 
 const client = new BedrockRuntimeClient({
   region: process.env.AWS_REGION || "us-east-1",
@@ -58,29 +67,51 @@ export async function invokeBedrock(
   return responseBody.content[0].text;
 }
 
-export async function analyzeArchitecture(
-  fileTree: string,
-  keyFileContents: string
-): Promise<string> {
-  const systemPrompt = `You are an expert software architect analyzing a codebase to help new developers onboard quickly.
-Analyze the codebase and return a JSON object with this exact structure:
-{
-  "nodes": [{ "id": "string", "label": "string", "type": "module|service|config|entry|util", "files": ["string"], "description": "string" }],
-  "edges": [{ "source": "string", "target": "string", "label": "string" }],
-  "techStack": { "key": "value" },
-  "summary": "2-3 sentence overview of the project"
+/**
+ * Parse JSON from a Bedrock response, handling markdown fences gracefully.
+ */
+function parseJsonResponse(text: string): unknown {
+  // Strip markdown code fences if present
+  let cleaned = text.trim();
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+  }
+  return JSON.parse(cleaned);
 }
-Return ONLY valid JSON, no markdown or explanation.`;
 
-  const userMessage = `Here is the file tree of the project:\n\n${fileTree}\n\nHere are the key file contents:\n\n${keyFileContents}`;
+/**
+ * Two-pass architecture analysis using Bedrock Claude.
+ * Pass 1: Scan file tree + config files to identify high-level structure.
+ * Pass 2: Read key source files to refine module boundaries and edges.
+ */
+export async function analyzeArchitecture(
+  files: { path: string; content: string; size: number }[]
+): Promise<ArchitectureMap> {
+  const fileTree = buildFileTree(files);
+  const configContents = buildConfigContents(files);
+  const keyFileContents = buildKeyFileContents(files);
 
-  return invokeBedrock(
-    [{ role: "user", content: userMessage }],
-    systemPrompt,
+  // Pass 1: Analyze file tree and config files
+  const pass1Raw = await invokeBedrock(
+    [{ role: "user", content: ARCHITECTURE_PASS1_USER_PROMPT(fileTree, configContents) }],
+    ARCHITECTURE_SYSTEM_PROMPT,
     { model: "sonnet", maxTokens: 8192 }
   );
+
+  // Pass 2: Deep analysis with key source files
+  const pass2Raw = await invokeBedrock(
+    [{ role: "user", content: ARCHITECTURE_PASS2_USER_PROMPT(pass1Raw, keyFileContents) }],
+    ARCHITECTURE_SYSTEM_PROMPT,
+    { model: "sonnet", maxTokens: 8192 }
+  );
+
+  const result = parseJsonResponse(pass2Raw) as ArchitectureMap;
+  return result;
 }
 
+/**
+ * Answer a question about a codebase using architecture context and relevant files.
+ */
 export async function answerQuestion(
   question: string,
   architectureContext: string,
