@@ -111,6 +111,16 @@ export default function QAPage() {
               Q&A
             </a>
           </li>
+          <li>
+            <a href={`/dashboard/${repoId}/progress`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              My Progress
+            </a>
+          </li>
+          <li>
+            <a href={`/dashboard/${repoId}/team`} className="block px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-300 text-sm transition-colors">
+              Team
+            </a>
+          </li>
         </ul>
       </nav>
 

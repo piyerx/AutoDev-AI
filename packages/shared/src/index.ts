@@ -28,4 +28,10 @@ export type {
   TranslatedContent,
   EmbeddingResult,
   SemanticSearchResult,
+  SkillArea,
+  SkillScore,
+  ProgressEvent,
+  DeveloperProgress,
+  ProgressSnapshot,
+  TeamProgress,
 } from "./types/analysis.js";

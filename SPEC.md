@@ -120,50 +120,50 @@ Build AutoDev — a platform that connects to GitHub repos and generates interac
 ## Milestone 5: Animated Visual Walkthroughs + Multi-Language Support (Day 5)
 
 ### Files to Create/Modify
-- [ ] `packages/backend/src/services/embeddings.ts` — Titan embedding pipeline
-- [ ] `packages/backend/src/services/semanticSearch.ts` — cosine similarity search
-- [ ] `packages/backend/src/services/cache.ts` — DynamoDB caching with TTL
-- [ ] `packages/backend/src/services/i18n.ts` — multi-language explanation service (Bedrock prompt wrapper for Hindi, Tamil, Telugu, Kannada, Bengali, Marathi)
-- [ ] `packages/backend/src/prompts/animatedFlow.ts` — prompt to generate step-by-step node sequences for animated walkthroughs
-- [ ] `packages/frontend/src/components/AnimatedArchitectureMap.tsx` — React Flow with animated node-by-node highlighting, auto-play, pause-on-click
-- [ ] `packages/frontend/src/components/LanguageSelector.tsx` — language picker (English, Hindi, Tamil, Telugu, Kannada, Bengali, Marathi)
-- [ ] `packages/frontend/src/app/dashboard/[repoId]/animated/page.tsx` — animated walkthrough page
-- [ ] `packages/vscode-extension/src/providers/CodeLensProvider.ts` — inline annotations
+- [x] `packages/backend/src/services/embeddings.ts` — Titan embedding pipeline
+- [x] `packages/backend/src/services/semanticSearch.ts` — cosine similarity search
+- [x] `packages/backend/src/services/cache.ts` — DynamoDB caching with TTL
+- [x] `packages/backend/src/services/i18n.ts` — multi-language explanation service (Bedrock prompt wrapper for Hindi, Tamil, Telugu, Kannada, Bengali, Marathi)
+- [x] `packages/backend/src/prompts/animatedFlow.ts` — prompt to generate step-by-step node sequences for animated walkthroughs
+- [x] `packages/frontend/src/components/AnimatedArchitectureMap.tsx` — React Flow with animated node-by-node highlighting, auto-play, pause-on-click
+- [x] `packages/frontend/src/components/LanguageSelector.tsx` — language picker (English, Hindi, Tamil, Telugu, Kannada, Bengali, Marathi)
+- [x] `packages/frontend/src/app/dashboard/[repoId]/animated/page.tsx` — animated walkthrough page
+- [x] `packages/vscode-extension/src/providers/CodeLensProvider.ts` — inline annotations
 
 ### Definition of Done — Milestone 5
-- [ ] Q&A uses semantic search for better file retrieval
-- [ ] Responses cached in DynamoDB
-- [ ] **Animated Visual Walkthroughs**: nodes light up in sequence showing request flow (e.g. User → API Gateway → Auth → DB → Response)
-- [ ] Click any node mid-animation → pause and get AI explanation
-- [ ] Per-module animated explainers: "Frontend Layer", "Auth System", "Data Pipeline"
-- [ ] Animation sequences auto-generated from codebase analysis
-- [ ] **Multi-Language Support**: Q&A and walkthroughs available in Hindi, Tamil, Telugu, Kannada, Bengali, Marathi
-- [ ] Language selector on dashboard and VS Code extension
-- [ ] "Explain like I'm a fresher" mode in any supported language
-- [ ] VS Code has CodeLens annotations
+- [x] Q&A uses semantic search for better file retrieval
+- [x] Responses cached in DynamoDB
+- [x] **Animated Visual Walkthroughs**: nodes light up in sequence showing request flow (e.g. User → API Gateway → Auth → DB → Response)
+- [x] Click any node mid-animation → pause and get AI explanation
+- [x] Per-module animated explainers: "Frontend Layer", "Auth System", "Data Pipeline"
+- [x] Animation sequences auto-generated from codebase analysis
+- [x] **Multi-Language Support**: Q&A and walkthroughs available in Hindi, Tamil, Telugu, Kannada, Bengali, Marathi
+- [x] Language selector on dashboard and VS Code extension
+- [x] "Explain like I'm a fresher" mode in any supported language
+- [x] VS Code has CodeLens annotations
 
 ---
 
 ## Milestone 6: Learning Progress Dashboard + Skill Tracker (Day 6)
 
 ### Files to Create/Modify
-- [ ] `packages/backend/src/routes/skillTracker.ts` — skill/progress tracking endpoints
-- [ ] `packages/backend/src/services/progressTracker.ts` — tracks modules explored, Q&A asked, walkthroughs completed, time spent per area
-- [ ] `packages/frontend/src/app/dashboard/[repoId]/progress/page.tsx` — learning progress dashboard
-- [ ] `packages/frontend/src/components/SkillRadar.tsx` — radar chart (Auth, API, DB, Frontend, Infra, etc.)
-- [ ] `packages/frontend/src/components/ProgressTimeline.tsx` — "0% → 80% understanding" visual timeline
-- [ ] `packages/frontend/src/components/ModuleCompletionGrid.tsx` — grid showing completed vs remaining modules
-- [ ] `packages/frontend/src/app/dashboard/[repoId]/team/page.tsx` — team-level progress view
+- [x] `packages/backend/src/routes/skillTracker.ts` — skill/progress tracking endpoints
+- [x] `packages/backend/src/services/progressTracker.ts` — tracks modules explored, Q&A asked, walkthroughs completed, time spent per area
+- [x] `packages/frontend/src/app/dashboard/[repoId]/progress/page.tsx` — learning progress dashboard
+- [x] `packages/frontend/src/components/SkillRadar.tsx` — radar chart (Auth, API, DB, Frontend, Infra, etc.)
+- [x] `packages/frontend/src/components/ProgressTimeline.tsx` — "0% → 80% understanding" visual timeline
+- [x] `packages/frontend/src/components/ModuleCompletionGrid.tsx` — grid showing completed vs remaining modules
+- [x] `packages/frontend/src/app/dashboard/[repoId]/team/page.tsx` — team-level progress view
 
 ### Definition of Done — Milestone 6
-- [ ] **Learning Progress Dashboard**: shows per-developer codebase understanding percentage
-- [ ] Skill radar charts: visual breakdown per module (Auth 70%, API 40%, DB 90%)
-- [ ] Progress timeline: "Developer went from 0% to 80% in 2 hours"
-- [ ] Module completion tracking: walkthroughs viewed, Q&As asked, areas explored
-- [ ] Team view: compare onboarding progress across developers
+- [x] **Learning Progress Dashboard**: shows per-developer codebase understanding percentage
+- [x] Skill radar charts: visual breakdown per module (Auth 70%, API 40%, DB 90%)
+- [x] Progress timeline: "Developer went from 0% to 80% in 2 hours"
+- [x] Module completion tracking: walkthroughs viewed, Q&As asked, areas explored
+- [x] Team view: compare onboarding progress across developers
 - [ ] Tested with 3+ real repos of varying sizes
 - [ ] Edge cases handled (large repos, empty repos, non-code repos)
-- [ ] All features working end-to-end
+- [x] All features working end-to-end
 
 ---
 

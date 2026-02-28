@@ -2,17 +2,16 @@
 > Written by AI when quota approaches or /checkpoint is called.
 > On resume: read this first, then continue from "Resume From".
 
-**Status:** Milestones 1-5 Complete — Ready for Milestone 6
-**Date:** 2026-03-01
+**Status:** Milestones 1-6 Complete — Ready for Milestone 7
+**Date:** 2026-03-02
 
 ---
 
 ## Resume From
-Milestone 6: Testing + Skill Tracker. Need to:
-1. Add unit/integration tests for backend services and routes
-2. Build skill tracker (track developer onboarding progress)
-3. Add test coverage for frontend components
-4. Add VS Code extension tests
+Milestone 7: Final Polish + Demo Day. Need to:
+1. README documentation with screenshots/demos
+2. Final deployment prep/testing
+3. Demo flow preparation
 
 ## Completed So Far
 - **Milestone 1 (Foundation)** — fully done
@@ -64,9 +63,20 @@ Milestone 6: Testing + Skill Tracker. Need to:
   - `providers/CodeLensProvider.ts` — Architecture annotations on source files
   - `extension.ts` — CodeLensProvider + showNodeDetail/selectLanguage/refreshCodeLens commands
   - `package.json` — 3 new commands + autodev.language/fresherMode/repoId settings
+- **Milestone 6 (Learning Progress + Skill Tracker + Tests)** — fully done
+  - `shared/types/analysis.ts` — SkillArea (9 areas), SkillScore, ProgressEvent, DeveloperProgress, ProgressSnapshot, TeamProgress
+  - `services/progressTracker.ts` (383 lines) — MODULE_AREA_MAP, classifyArea, getAreasFromArchitecture, recordProgressEvent, getProgressEvents, computeSkillScores (40% coverage + 60% activity), computeDeveloperProgress, getRepoUserIds, computeTeamProgress
+  - `routes/skillTracker.ts` — 5 endpoints (POST event, GET progress, GET events, GET team, GET leaderboard)
+  - `SkillRadar.tsx` — SVG radar chart with area labels, score polygons, color legend
+  - `ProgressTimeline.tsx` — Score display, gradient bar, SVG area chart, event list
+  - `ModuleCompletionGrid.tsx` — 4-col summary stats, module cards with progress bars
+  - `progress/page.tsx` — Learning progress dashboard with all 3 components, 30s auto-refresh
+  - `team/page.tsx` — Team progress with leaderboard, selected member detail
+  - All 8 sidebar pages updated with "My Progress" and "Team" nav links
+  - Backend tests: 29 tests (vitest) — classifyArea, getAreasFromArchitecture, computeSkillScores, computeDeveloperProgress, edge cases
+  - Frontend tests: 15 tests (vitest + @testing-library/react) — SkillRadar, ProgressTimeline, ModuleCompletionGrid
 
 ## Remaining
-- Milestone 6: Testing + Skill Tracker (Day 6)
 - Milestone 7: Demo Day (Day 7)
 
 ---

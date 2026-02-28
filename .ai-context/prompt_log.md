@@ -98,3 +98,23 @@
 - Updated `package.json` — Added 3 new commands + configuration (repoId, language, fresherMode settings)
 **Next:** Milestone 6 — Testing + Skill Tracker
 ---
+
+### [MILESTONE 6: LEARNING PROGRESS + SKILL TRACKER + TESTS] ✅ COMPLETED
+**Prompt:** Build Milestone 6 — Learning Progress Dashboard, Skill Radar, Progress Timeline, Module Completion Grid, Team View, Backend + Frontend Tests
+**Changes:**
+- Updated `shared/types/analysis.ts` — SkillArea (9 areas), SkillScore, ProgressEvent, DeveloperProgress, ProgressSnapshot, TeamProgress types
+- Updated `shared/index.ts` — Exported all 6 new types
+- Created `services/progressTracker.ts` (383 lines) — MODULE_AREA_MAP, classifyArea, getAreasFromArchitecture, recordProgressEvent (DynamoDB), getProgressEvents, SCORE_WEIGHTS, computeSkillScores (40% coverage + 60% activity), computeDeveloperProgress (timeline snapshots), getRepoUserIds, computeTeamProgress
+- Created `routes/skillTracker.ts` — 5 endpoints (POST event, GET progress, GET events, GET team, GET leaderboard) under /api/progress
+- Updated `backend/index.ts` — Registered skillTrackerRoutes mount
+- Created `SkillRadar.tsx` (171 lines) — SVG radar chart with area labels, score polygons, color legend
+- Created `ProgressTimeline.tsx` (180 lines) — Score display, gradient bar, SVG area chart, event list
+- Created `ModuleCompletionGrid.tsx` (178 lines) — 4-col summary stats, module cards with progress bars, icons
+- Created `progress/page.tsx` (~190 lines) — Learning progress dashboard with all 3 components, 30s auto-refresh
+- Created `team/page.tsx` (~310 lines) — Team progress with leaderboard, selected member detail
+- Updated all 8 sidebar pages with "My Progress" and "Team" nav links
+- **Backend tests** (29 tests, ALL PASSING) — classifyArea (9), getAreasFromArchitecture (3), computeSkillScores (6), computeDeveloperProgress (8), edge cases (3)
+- **Frontend tests** (15 tests, ALL PASSING) — SkillRadar (6), ProgressTimeline (4), ModuleCompletionGrid (5)
+- Added vitest to backend + frontend, vitest.config.ts for both, @testing-library/react + jsdom for frontend
+**Next:** Milestone 7 — Final polish, deployment, README
+---
